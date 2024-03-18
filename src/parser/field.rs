@@ -8,7 +8,7 @@ use std::str::FromStr;
 /// This enum defines ALL THE SUPPORTED fields in ssh config,
 /// as described at <http://man.openbsd.org/OpenBSD-current/man5/ssh_config.5>.
 /// Only a few of them are implemented, as described in `HostParams` struct.
-#[derive(Debug, Eq, PartialEq)]
+#[derive(Clone, Debug, Eq, Hash, PartialEq)]
 pub enum Field {
     Host,
     BindAddress,

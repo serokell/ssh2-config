@@ -64,7 +64,7 @@ mod parser;
 // -- export
 pub use host::{Host, HostClause};
 pub use params::HostParams;
-pub use parser::{ParseRule, SshParserError, SshParserResult};
+pub use parser::{ParseRule, SshParserError, SshParserResult, Field};
 
 /// Describes the ssh configuration.
 /// Configuration is describes in this document: <http://man.openbsd.org/OpenBSD-current/man5/ssh_config.5>

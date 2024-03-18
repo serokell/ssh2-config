@@ -14,7 +14,7 @@ use super::{Host, HostClause, HostParams, SshConfig};
 
 // modules
 mod field;
-use field::Field;
+pub use field::Field;
 
 pub type SshParserResult<T> = Result<T, SshParserError>;
 
@@ -91,7 +91,7 @@ impl SshConfigParser {
                     if rules.intersects(ParseRule::ALLOW_UNKNOWN_FIELDS)
                         || current_host.params.ignored(&field) =>
                 {
-                    current_host.params.ignored_fields.insert(field, args);
+                    current_host.params.unparsed_fields.insert(field, args);
                     continue;
                 }
                 Err(SshParserError::UnknownField(field, args)) => {
@@ -275,7 +275,9 @@ impl SshConfigParser {
             | Field::UserKnownHostsFile
             | Field::VerifyHostKeyDNS
             | Field::VisualHostKey
-            | Field::XAuthLocation => { /* Ignore fields */ }
+            | Field::XAuthLocation => {
+                params.ignored_fields.insert(field, args);
+            }
         }
         Ok(())
     }

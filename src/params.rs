@@ -5,6 +5,7 @@
 use std::collections::HashMap;
 
 use super::{Duration, PathBuf};
+use crate::parser::Field;
 
 /// Describes the ssh configuration.
 /// Configuration is describes in this document: <http://man.openbsd.org/OpenBSD-current/man5/ssh_config.5>
@@ -58,8 +59,10 @@ pub struct HostParams {
     pub use_keychain: Option<bool>,
     /// Specifies the user to log in as.
     pub user: Option<String>,
+    // fields that were parsed but aren't supported at the moment
+    pub ignored_fields: HashMap<Field, Vec<String>>,
     /// fields that the parser wasn't able to parse
-    pub ignored_fields: HashMap<String, Vec<String>>,
+    pub unparsed_fields: HashMap<String, Vec<String>>,
 }
 
 impl HostParams {
@@ -172,6 +175,14 @@ impl HostParams {
                 if !self.ignored_fields.contains_key(ignored_field) {
                     self.ignored_fields
                         .insert(ignored_field.to_owned(), args.to_owned());
+                }
+            }
+        }
+        if !b.unparsed_fields.is_empty() {
+            for (unparsed_field, args) in &b.unparsed_fields {
+                if !self.unparsed_fields.contains_key(unparsed_field) {
+                    self.unparsed_fields
+                        .insert(unparsed_field.to_owned(), args.to_owned());
                 }
             }
         }
